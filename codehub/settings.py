@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     #config for codingcenter
-    'codingcenter.apps.CodingcenterConfig'
+    'codingcenter.apps.CodingcenterConfig',
 ]
 
 MIDDLEWARE = [
