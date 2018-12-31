@@ -1,7 +1,6 @@
 .idea/
 myenv/
 myenv-test/
-requriments.txt
 */__pycache__/
 */*/__pycache__/
 codingcenter/migrations/*
