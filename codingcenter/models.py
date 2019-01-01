@@ -5,7 +5,7 @@ from codingcenter.scraper_config import SUPPORTED_PLATFORMS
 class Question(models.Model):
     title = models.CharField(max_length= 30)
     url = models.CharField(max_length= 100, unique= True)
-    platform = models.CharField(max_length=5, choices= SUPPORTED_PLATFORMS)
+    platform = models.CharField(max_length=10, choices= SUPPORTED_PLATFORMS)
 
 class Assignment(models.Model):
     title = models.CharField(max_length=20)

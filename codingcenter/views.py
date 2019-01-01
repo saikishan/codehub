@@ -2,6 +2,8 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
+from codingcenter.serializers import  AssignmentSerializer
+from codingcenter.models import Assignment
 # Create your views here.
 
 
@@ -12,22 +14,13 @@ class AssignmentListView(APIView):
     #post: accept the config for the assignemt
     """
     def get(self, request, format = None):
-        sample_data = [
-            {
-                "name":"Hack1",
-                "owner":"abhinav_dayal",
-                "questions_count": 30,
-                "status":"active",
-            },
-            {
-                "name": "Hack2",
-                "owner": "abhinav_dayal",
-                "questions_count": 30,
-                "status": "active",
-            }
-        ]
-        return Response(sample_data, status = status.HTTP_200_OK)
+
+        return Response(AssignmentSerializer(Assignment.objects.all() ,many= True).data , status = status.HTTP_200_OK)
 
     def post(self, request, format = None):
+        assignmentserialised = AssignmentSerializer(data=request.data)
+        if assignmentserialised.is_valid():
+            assignmentserialised.save()
+            return Response(assignmentserialised.data, status= status.HTTP_201_CREATED)
+        return Response(assignmentserialised.errors , status= status.HTTP_400_BAD_REQUEST)
 
-        return Response()
