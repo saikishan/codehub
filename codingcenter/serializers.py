@@ -28,3 +28,14 @@ class AssignmentSerializer(serializers.ModelSerializer):
             question, created = Question.objects.get_or_create(url= question_data.pop("url"), defaults=question_data)
             question.assignment_set.add(assignment)
         return assignment
+
+    def update(self, instance, validated_data):
+        instance.title = validated_data.get("title", instance.title)
+        instance.owner = validated_data.get("owner", instance.owner)
+        questions_data = validated_data.pop('questions')
+        if questions_data:
+            instance.questions.clear()
+            for question_data in questions_data:
+                question, created = Question.objects.update_or_create(url= question_data.pop("url"), defaults=question_data)
+                instance.questions.add(question)
+        return instance

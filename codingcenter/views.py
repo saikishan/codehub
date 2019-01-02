@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from codingcenter.serializers import  AssignmentSerializer
+from django.http import Http404
 from codingcenter.models import Assignment
 # Create your views here.
 
@@ -23,4 +24,26 @@ class AssignmentListView(APIView):
             assignmentserialised.save()
             return Response(assignmentserialised.data, status= status.HTTP_201_CREATED)
         return Response(assignmentserialised.errors , status= status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+class AssignmentDetailView(APIView):
+    def get_object(self, pk):
+        try:
+            return Assignment.objects.get(pk=pk)
+        except Assignment.DoesNotExist:
+            raise Http404
+    def put(self,request ,pk, format=None):
+        assignment = self.get_object(pk)
+        serializer = AssignmentSerializer(assignment, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status= status.HTTP_202_ACCEPTED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, pk, format=None):
+        pass
+
 
