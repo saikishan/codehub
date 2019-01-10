@@ -25,16 +25,13 @@ class AssignmentListView(APIView):
             return Response(assignmentserialised.data, status= status.HTTP_201_CREATED)
         return Response(assignmentserialised.errors , status= status.HTTP_400_BAD_REQUEST)
 
-
-
-
-
 class AssignmentDetailView(APIView):
     def get_object(self, pk):
         try:
             return Assignment.objects.get(pk=pk)
         except Assignment.DoesNotExist:
             raise Http404
+
     def put(self,request ,pk, format=None):
         assignment = self.get_object(pk)
         serializer = AssignmentSerializer(assignment, data=request.data)
@@ -52,7 +49,7 @@ class AssignmentDetailView(APIView):
         assignment = self.get_object(pk)
         return Response(status= status.HTTP_200_OK)
 
-class QuestionDetailView():
+class QuestionDetailView(APIView):
     def get_object(self, pk):
         try:
             return Assignment.objects.get(pk=pk)
