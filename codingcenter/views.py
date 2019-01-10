@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from codingcenter.serializers import  AssignmentSerializer,QuestionSerializer
+from codingcenter.serializers import  AssignmentSerializer,QuestionSerializer,UserDetailSerializer
 from django.http import Http404
 from codingcenter.models import Assignment
 # Create your views here.
@@ -60,3 +60,11 @@ class QuestionDetailView(APIView):
         question = self.get_object(pk)
         serializer = QuestionSerializer(question)
         return Response(serializer.data)
+
+class UserListView(APIView):
+    def post(self, request, format=None):
+        userserialised = UserDetailSerializer(data=request.data)
+        if userserialised.is_valid():
+            userserialised.save()
+            return Response(userserialised.data, status=status.HTTP_201_CREATED)
+        return Response(userserialised.errors, status=status.HTTP_400_BAD_REQUEST)

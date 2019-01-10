@@ -49,6 +49,8 @@ class User(AbstractBaseUser):
     name = models.CharField(max_length=100)
     date_of_birth = models.DateField()
 
+    is_staff = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['date_of_birth', 'name', 'username']
 

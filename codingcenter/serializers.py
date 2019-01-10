@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from codingcenter.models import Assignment,Question
+from codingcenter.models import Assignment,Question,User
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -40,3 +40,19 @@ class AssignmentSerializer(serializers.ModelSerializer):
                 question, created = Question.objects.update_or_create(url= question_data.pop("url"), defaults=question_data)
                 instance.questions.add(question)
         return instance
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username','email','name')
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    class Meta:
+        model = User
+        fields = ('username','email','name', 'date_of_birth', 'password')
+
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
+
