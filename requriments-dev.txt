@@ -1,9 +1,13 @@
 appnope==0.1.0
 backcall==0.1.0
+certifi==2018.11.29
+chardet==3.0.4
 decorator==4.3.0
 Django==2.1.4
 djangorestframework==3.9.0
 djangorestframework-jwt==1.11.0
+httpie==1.0.2
+idna==2.8
 ipython==7.2.0
 ipython-genutils==0.2.0
 jedi==0.13.2
@@ -15,6 +19,8 @@ ptyprocess==0.6.0
 Pygments==2.3.1
 PyJWT==1.7.1
 pytz==2018.7
+requests==2.21.0
 six==1.12.0
 traitlets==4.3.2
+urllib3==1.24.1
 wcwidth==0.1.7
