@@ -159,5 +159,6 @@ STATIC_URL = '/static/'
 
 #JWT config
 JWT_AUTH = {
-
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=30000),
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
 }

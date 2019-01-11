@@ -48,6 +48,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
 
 class UserListSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+    email = serializers.CharField(write_only=True)
     is_admin = serializers.BooleanField(read_only=True)
     is_staff = serializers.BooleanField(read_only=True)
     class Meta:
@@ -71,8 +72,6 @@ class UserAdminSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance.is_admin = validated_data.get("is_admin", instance.is_admin)
-        if instance.is_admin == True:
-            instance.is_staff = True
         instance.is_staff = validated_data.get("is_staff", instance.is_staff)
         return instance
 

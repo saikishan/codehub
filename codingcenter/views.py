@@ -3,7 +3,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from codingcenter.serializers import  AssignmentSerializer, QuestionSerializer, UserListSerializer, UserDetailSerializer
+from .permissions import IsAdminPermission,IsStaffPermission
+from codingcenter.serializers import  (AssignmentSerializer, QuestionSerializer,
+                                       UserListSerializer, UserDetailSerializer,
+                                       UserAdminSerializer)
 from django.http import Http404
 from codingcenter.models import Assignment,Question,User
 # Create your views here.
@@ -15,8 +18,8 @@ class AssignmentListView(APIView):
     #get: return the list of assignemts
     #post: accept the config for the assignemt
     """
+    permission_classes = [IsAuthenticated, IsStaffPermission]
     def get(self, request, format = None):
-
         return Response(AssignmentSerializer(Assignment.objects.all() ,many= True).data , status = status.HTTP_200_OK)
 
     def post(self, request, format = None):
@@ -27,6 +30,7 @@ class AssignmentListView(APIView):
         return Response(assignmentserialised.errors , status= status.HTTP_400_BAD_REQUEST)
 
 class AssignmentDetailView(APIView):
+    permission_classes = [IsAuthenticated, IsStaffPermission]
     def get_object(self, pk):
         try:
             return Assignment.objects.get(pk=pk)
@@ -51,6 +55,7 @@ class AssignmentDetailView(APIView):
         return Response(status= status.HTTP_200_OK)
 
 class QuestionDetailView(APIView):
+    permission_classes = [IsAuthenticated, IsStaffPermission]
     def get_object(self, pk):
         try:
             return Question.objects.get(pk=pk)
@@ -97,5 +102,19 @@ class UserDetailView(APIView):
             return Response(user_serialised.data, status=status.HTTP_202_ACCEPTED)
         return Response(user_serialised.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class AdminUserView(APIView):
 
+    permission_classes = [IsAuthenticated, IsStaffPermission]
 
+    def get_object(self,username):
+        try:
+            return User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise Http404
+
+    def put(self, request, username, format=None):
+        user = user = self.get_object(username)
+        user_serialised = UserListSerializer(user, data=request)
+        if user_serialised.is_valid():
+            user_serialised.save()
+            return Response(user_serialised.data, status=status.HTTP_202_ACCEPTED)
