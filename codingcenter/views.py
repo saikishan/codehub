@@ -63,8 +63,8 @@ class QuestionDetailView(APIView):
         return Response(serializer.data)
 
 class UserListView(APIView):
-    def get(self, request, format):
-        return  UserListSerializer(User.objects.all,many=True)
+    def get(self, request, format=None):
+        return  Response(UserListSerializer(User.objects.all(),many=True).data)
 
     def post(self, request, format=None):
         userserialised = UserListSerializer(data=request.data)

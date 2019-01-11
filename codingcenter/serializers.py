@@ -64,4 +64,15 @@ class UserListSerializer(serializers.ModelSerializer):
         instance.email = validated_data.get("email", instance.email)
         instance.date_of_birth = validated_data.get("date_of_birth", instance.date_of_birth)
 
+class UserAdminSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('is_admin', 'is_staff')
+
+    def update(self, instance, validated_data):
+        instance.is_admin = validated_data.get("is_admin", instance.is_admin)
+        if instance.is_admin == True:
+            instance.is_staff = True
+        instance.is_staff = validated_data.get("is_staff", instance.is_staff)
+        return instance
 
