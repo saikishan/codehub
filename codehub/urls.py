@@ -24,5 +24,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('users',UserListView.as_view()),
     path('users/<username>', UserDetailView.as_view()),
-    path('codingcenter', include('codingcenter.urls'))
+    path('codingcenter/', include('codingcenter.urls'))
 ]

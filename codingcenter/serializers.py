@@ -52,13 +52,16 @@ class UserListSerializer(serializers.ModelSerializer):
     is_staff = serializers.BooleanField(read_only=True)
     class Meta:
         model = User
-        fields = ('username','email','name', 'date_of_birth', 'password')
+        fields = ('username','email','name', 'date_of_birth', 'password', "is_admin", "is_staff")
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
 
     def update(self, instance, validated_data):
-        pass
-        #instance.name = validated_data.
+        instance.name = validated_data.get("name", instance.name)
+        instance.username = validated_data.get("username", instance.name)
+        instance.email = validated_data.get("email", instance.email)
+        instance.date_of_birth = validated_data.get("date_of_birth", instance.date_of_birth)
+
 
