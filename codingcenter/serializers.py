@@ -41,13 +41,15 @@ class AssignmentSerializer(serializers.ModelSerializer):
                 instance.questions.add(question)
         return instance
 
-class UserSerializer(serializers.ModelSerializer):
+class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username','email','name')
+        fields = ('username','email','name',)
 
-class UserDetailSerializer(serializers.ModelSerializer):
+class UserListSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+    is_admin = serializers.BooleanField(read_only=True)
+    is_staff = serializers.BooleanField(read_only=True)
     class Meta:
         model = User
         fields = ('username','email','name', 'date_of_birth', 'password')
@@ -55,4 +57,8 @@ class UserDetailSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
+
+    def update(self, instance, validated_data):
+        pass
+        #instance.name = validated_data.
 
