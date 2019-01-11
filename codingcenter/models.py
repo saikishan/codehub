@@ -51,6 +51,8 @@ class User(AbstractBaseUser):
 
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
+
+    description = models.CharField(default="Explain Yourself!", max_length=500)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['date_of_birth', 'name', 'username']
 
@@ -60,10 +62,10 @@ class User(AbstractBaseUser):
 class Question(models.Model):
     title = models.CharField(max_length= 30)
     url = models.CharField(max_length= 100, unique= True)
-    created_by = models.ForeignKey('codingcenter.User', related_name='questions', null=True,on_delete= models.SET_NULL)
+    created_by = models.ForeignKey('codingcenter.User', related_name='created_questions', null=True, on_delete=models.SET_NULL)
 
 class Assignment(models.Model):
     title = models.CharField(max_length=20)
-    created_by = models.ForeignKey('codingcenter.User',related_name= 'assignments', null=True, on_delete= models.SET_NULL)
+    created_by = models.ForeignKey('codingcenter.User',related_name= 'created_assignments', null=True, on_delete=models.SET_NULL)
     questions = models.ManyToManyField(Question)
     participant = models.ManyToManyField(User)

@@ -1,6 +1,39 @@
 from rest_framework import serializers
 from codingcenter.models import Assignment,Question,User
 
+class UserListSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    email = serializers.CharField(write_only=True)
+    is_admin = serializers.BooleanField(read_only=True)
+    is_staff = serializers.BooleanField(read_only=True)
+    class Meta:
+        model = User
+        fields = ('username','email','name', 'password', "is_admin", "is_staff")
+
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
+
+    def update(self, instance, validated_data):
+        instance.name = validated_data.get("name", instance.name)
+        instance.username = validated_data.get("username", instance.name)
+        instance.email = validated_data.get("email", instance.email)
+        instance.date_of_birth = validated_data.get("date_of_birth", instance.date_of_birth)
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username','email','name',)
+
+class UserAdminSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('is_admin', 'is_staff')
+
+    def update(self, instance, validated_data):
+        instance.is_admin = validated_data.get("is_admin", instance.is_admin)
+        instance.is_staff = validated_data.get("is_staff", instance.is_staff)
+        return instance
 
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,16 +48,20 @@ class QuestionSerializer(serializers.ModelSerializer):
         obj.save()
         return obj
 
-
 class AssignmentSerializer(serializers.ModelSerializer):
-    questions = QuestionSerializer(many=True)
+    questions = QuestionSerializer(many=True, write_only=True, required=False)
+    created_by = UserListSerializer(required=False)
+    def _user(self):
+        return self.context["request"].user
+
     class Meta:
         model = Assignment
-        fields = ('id','title','owner','questions')
+        fields = ('id','title','questions',"created_by")
+
 
     def create(self, validated_data):
-        questions_data = validated_data.pop('questions')
-        assignment = Assignment.objects.create(**validated_data)
+        questions_data = validated_data.pop('questions',[])
+        assignment = Assignment.objects.create(created_by=self._user(), **validated_data)
         for question_data in questions_data:
             question, created = Question.objects.get_or_create(url= question_data.pop("url"), defaults=question_data)
             question.assignment_set.add(assignment)
@@ -32,7 +69,6 @@ class AssignmentSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance.title = validated_data.get("title", instance.title)
-        instance.owner = validated_data.get("owner", instance.owner)
         questions_data = validated_data.pop('questions')
         if questions_data:
             instance.questions.clear()
@@ -41,37 +77,4 @@ class AssignmentSerializer(serializers.ModelSerializer):
                 instance.questions.add(question)
         return instance
 
-class UserDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('username','email','name',)
-
-class UserListSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-    email = serializers.CharField(write_only=True)
-    is_admin = serializers.BooleanField(read_only=True)
-    is_staff = serializers.BooleanField(read_only=True)
-    class Meta:
-        model = User
-        fields = ('username','email','name', 'date_of_birth', 'password', "is_admin", "is_staff")
-
-    def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        return user
-
-    def update(self, instance, validated_data):
-        instance.name = validated_data.get("name", instance.name)
-        instance.username = validated_data.get("username", instance.name)
-        instance.email = validated_data.get("email", instance.email)
-        instance.date_of_birth = validated_data.get("date_of_birth", instance.date_of_birth)
-
-class UserAdminSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('is_admin', 'is_staff')
-
-    def update(self, instance, validated_data):
-        instance.is_admin = validated_data.get("is_admin", instance.is_admin)
-        instance.is_staff = validated_data.get("is_staff", instance.is_staff)
-        return instance
 

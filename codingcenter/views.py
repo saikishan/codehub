@@ -4,9 +4,9 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsAdminPermission,IsStaffPermission
-from codingcenter.serializers import  (AssignmentSerializer, QuestionSerializer,
-                                       UserListSerializer, UserDetailSerializer,
-                                       UserAdminSerializer)
+from codingcenter.serializers import  (AssignmentSerializer,
+                                       QuestionSerializer,
+                                       UserListSerializer, UserDetailSerializer,UserAdminSerializer)
 from django.http import Http404
 from codingcenter.models import Assignment,Question,User
 # Create your views here.
@@ -18,12 +18,14 @@ class AssignmentListView(APIView):
     #get: return the list of assignemts
     #post: accept the config for the assignemt
     """
-    permission_classes = [IsAuthenticated, IsStaffPermission]
+    permission_classes = [IsAuthenticated,]# IsStaffPermission]
     def get(self, request, format = None):
         return Response(AssignmentSerializer(Assignment.objects.all() ,many= True).data , status = status.HTTP_200_OK)
 
     def post(self, request, format = None):
-        assignmentserialised = AssignmentSerializer(data=request.data)
+        assignmentserialised = AssignmentSerializer(data=request.data, context={
+            'request' : request,
+        })
         if assignmentserialised.is_valid():
             assignmentserialised.save()
             return Response(assignmentserialised.data, status= status.HTTP_201_CREATED)
