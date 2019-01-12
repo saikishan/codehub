@@ -63,9 +63,17 @@ class Question(models.Model):
     title = models.CharField(max_length= 30)
     url = models.CharField(max_length= 100, unique= True)
     created_by = models.ForeignKey('codingcenter.User', related_name='created_questions', null=True, on_delete=models.SET_NULL)
+    participants = models.ManyToManyField(User, related_name="questions_tried")
+    solved_by = models.ManyToManyField(User, related_name="questions_solved")
+
+    def has_user(self,user):
+        return True if (Question.objects.filter(id=self.id, participants_in= [user.id]).count() == 1 or Question.objects.filter(id=self.id, solved_by__in = user.id).count() == 1) else False
 
 class Assignment(models.Model):
     title = models.CharField(max_length=20)
     created_by = models.ForeignKey('codingcenter.User',related_name= 'created_assignments', null=True, on_delete=models.SET_NULL)
     questions = models.ManyToManyField(Question)
-    participant = models.ManyToManyField(User)
+    participants = models.ManyToManyField(User)
+
+    def has_user(self,user):
+        return True if (Assignment.objects.filter(id=self.id, participants_in= [user.id]).count() == 1) else False

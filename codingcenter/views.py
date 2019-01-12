@@ -11,6 +11,19 @@ from django.http import Http404
 from codingcenter.models import Assignment,Question,User
 # Create your views here.
 
+class AssignmentJoinView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get_object(self,pk):
+        try:
+            return Assignment.objects.get(pk=pk)
+        except Assignment.DoesNotExist:
+            raise Http404
+
+    def get(self,request,pk,format=None):
+        assignment = self.get_object(pk)
+        assignment.participants.add(request.user)
+        assignment.save()
+        return Response(status=status.HTTP_200_OK)
 
 class AssignmentListView(APIView):
     """
