@@ -158,6 +158,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 #JWT config
 JWT_AUTH = {
+'JWT_PAYLOAD_GET_USERNAME_HANDLER': 'codehub.utils.jwt_payload_get_username',
     'JWT_PAYLOAD_HANDLER' :'codehub.utils.jwt_payload_handler',
     'JWT_ALLOW_REFRESH': True,
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=15),

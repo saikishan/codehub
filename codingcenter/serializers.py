@@ -21,9 +21,11 @@ class UserListSerializer(serializers.ModelSerializer):
         instance.date_of_birth = validated_data.get("date_of_birth", instance.date_of_birth)
 
 class UserDetailSerializer(serializers.ModelSerializer):
+    is_admin = serializers.BooleanField(read_only=True)
+    is_staff = serializers.BooleanField(read_only=True)
     class Meta:
         model = User
-        fields = ('username','email','name',)
+        fields = ('username','email','name',"is_admin","is_staff")
 
 class UserAdminSerializer(serializers.ModelSerializer):
     class Meta:

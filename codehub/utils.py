@@ -1,4 +1,7 @@
-from codingcenter.serializers import UserListSerializer
+from codingcenter.serializers import UserDetailSerializer
 
 def jwt_payload_handler(user):
-    return UserListSerializer(user).data
+    return UserDetailSerializer(user).data
+
+def jwt_payload_get_username(payload):
+    return payload["email"]
