@@ -2,5 +2,8 @@
 myenv/
 myenv-test/
 requriments.txt
-*/__pycache__/
+*/__pycache__
 */*/__pycache__/
+*.pyo
+*.pyc
+pyc.sh
