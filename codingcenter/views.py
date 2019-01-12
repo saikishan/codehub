@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsAdminPermission,IsStaffPermission
-from codingcenter.serializers import  (AssignmentSerializer,
+from codingcenter.serializers import  (AssignmentListSerializer,AssignmentDetailSerializer,
                                        QuestionSerializer,
                                        UserListSerializer, UserDetailSerializer,UserAdminSerializer)
 from django.http import Http404
@@ -20,10 +20,10 @@ class AssignmentListView(APIView):
     """
     permission_classes = [IsAuthenticated,]# IsStaffPermission]
     def get(self, request, format = None):
-        return Response(AssignmentSerializer(Assignment.objects.all() ,many= True).data , status = status.HTTP_200_OK)
+        return Response(AssignmentListSerializer(Assignment.objects.all() ,many= True).data , status = status.HTTP_200_OK)
 
     def post(self, request, format = None):
-        assignmentserialised = AssignmentSerializer(data=request.data, context={
+        assignmentserialised = AssignmentListSerializer(data=request.data, context={
             'request' : request,
         })
         if assignmentserialised.is_valid():
@@ -41,7 +41,7 @@ class AssignmentDetailView(APIView):
 
     def put(self,request ,pk, format=None):
         assignment = self.get_object(pk)
-        serializer = AssignmentSerializer(assignment, data=request.data)
+        serializer = AssignmentListSerializer(assignment, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status= status.HTTP_202_ACCEPTED)
@@ -49,7 +49,7 @@ class AssignmentDetailView(APIView):
 
     def get(self, request, pk, format=None):
         assignment = self.get_object(pk)
-        serializer = AssignmentSerializer(assignment)
+        serializer = AssignmentDetailSerializer(assignment)
         return Response(serializer.data)
 
     def delete(self, request, pk, format=None):

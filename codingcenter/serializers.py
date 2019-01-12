@@ -40,7 +40,7 @@ class UserAdminSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ('id', 'title', 'url', 'platform')
+        fields = ('id', 'title', 'url')
         extra_kwargs = {
             'url': {'validators': []},
         }
@@ -50,8 +50,20 @@ class QuestionSerializer(serializers.ModelSerializer):
         obj.save()
         return obj
 
-class AssignmentSerializer(serializers.ModelSerializer):
-    questions = QuestionSerializer(many=True, write_only=True, required=False)
+class AssignmentListSerializer(serializers.ModelSerializer):
+    questions = QuestionSerializer(many=True, required=False, write_only=True)
+    created_by = UserListSerializer(required=False)
+    def _user(self):
+        return self.context["request"].user
+
+    class Meta:
+        model = Assignment
+        fields = ('id','title','questions',"created_by")
+
+
+
+class AssignmentDetailSerializer(serializers.ModelSerializer):
+    questions = QuestionSerializer(many=True, required=False)
     created_by = UserListSerializer(required=False)
     def _user(self):
         return self.context["request"].user
