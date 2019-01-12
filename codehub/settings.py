@@ -156,9 +156,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-
 #JWT config
 JWT_AUTH = {
+'JWT_RESPONSE_PAYLOAD_HANDLER':
+    'codehub.utils.jwt_response_payload_handler',
     'JWT_ALLOW_REFRESH': True,
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=15),
 
