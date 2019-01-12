@@ -38,23 +38,24 @@ class UserAdminSerializer(serializers.ModelSerializer):
         return instance
 
 class QuestionSerializer(serializers.ModelSerializer):
+    created_by = UserListSerializer(required=False)
     class Meta:
         model = Question
-        fields = ('id', 'title', 'url')
+        fields = ('id', 'url', 'created_by')
         extra_kwargs = {
             'url': {'validators': []},
         }
+    def _user(self):
+        return self.context["request"].user
 
-    def create(self, validated_data):
-        obj = Question.objects.create(**validated_data)
-        obj.save()
-        return obj
+    def create(self, question_data):
+        question_data["created_by"] = self._user()
+        question, created = Question.objects.get_or_create(url= question_data.pop("url"), defaults=question_data)
+        return question
 
 class AssignmentListSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True, required=False, write_only=True)
     created_by = UserListSerializer(required=False)
-    def _user(self):
-        return self.context["request"].user
 
     class Meta:
         model = Assignment

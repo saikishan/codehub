@@ -104,6 +104,35 @@ class UserDetailView(APIView):
             return Response(user_serialised.data, status=status.HTTP_202_ACCEPTED)
         return Response(user_serialised.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class AssignmentQuestionsView(APIView):
+    def get_object(self,pk):
+        try:
+            return Assignment.objects.get(pk=pk)
+        except Assignment.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        assignment = self.get_object(pk)
+        questionserialised = QuestionSerializer(assignment.questions, many=True)
+        return Response(questionserialised.data,status=200)
+
+    def post(self, request, pk, format=None):
+        assignment = self.get_object(pk)
+        question_serialised = QuestionSerializer(data= request.data, context={
+            "request" : request
+        })
+        if question_serialised.is_valid():
+            question = question_serialised.save()
+            assignment.questions.add(question)
+            assignment.save()
+            return Response(question_serialised.data, status=status.HTTP_201_CREATED)
+        return Response(question_serialised.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format):
+        assignment = self.get_object(pk)
+
+
+
 class AdminUserView(APIView):
 
     permission_classes = [IsAuthenticated, IsStaffPermission]
