@@ -153,7 +153,7 @@ class AssignmentQuestionsView(APIView):
 
 class AdminUserView(APIView):
 
-    permission_classes = [IsAuthenticated, IsStaffPermission]
+    permission_classes = [IsAuthenticated, IsAdminPermission]
 
     def get_object(self,username):
         try:
