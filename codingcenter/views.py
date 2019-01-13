@@ -117,6 +117,11 @@ class UserDetailView(APIView):
             return Response(user_serialised.data, status=status.HTTP_202_ACCEPTED)
         return Response(user_serialised.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class QuestionListView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request, format=None):
+        return Response(QuestionSerializer(Question.objects.all(), many=True).data, status= status.HTTP_200_OK)
+
 class AssignmentQuestionsView(APIView):
     def get_object(self,pk):
         try:

@@ -6,5 +6,6 @@ urlpatterns = [
     path('assignments/<pk>', views.AssignmentDetailView.as_view()),
     path('assignments/<pk>/questions', views.AssignmentQuestionsView.as_view()),
     path('questions/<pk>', views.QuestionDetailView.as_view()),
-    path('questions', views.QuestionDetailView.as_view())
+    path('questions',views.QuestionListView.as_view()),
+    #path('questions', views.QuestionDetailView.as_view())
 ]
