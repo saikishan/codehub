@@ -20,6 +20,8 @@ class UserListSerializer(serializers.ModelSerializer):
         instance.username = validated_data.get("username", instance.name)
         instance.email = validated_data.get("email", instance.email)
         instance.date_of_birth = validated_data.get("date_of_birth", instance.date_of_birth)
+        instance.save()
+        return instance
 
 class UserDetailSerializer(serializers.ModelSerializer):
     is_admin = serializers.BooleanField(read_only=True)
@@ -38,6 +40,7 @@ class UserAdminSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.is_admin = validated_data.get("is_admin", instance.is_admin)
         instance.is_staff = validated_data.get("is_staff", instance.is_staff)
+        instance.save()
         return instance
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -93,6 +96,7 @@ class AssignmentDetailSerializer(serializers.ModelSerializer):
             for question_data in questions_data:
                 question, created = Question.objects.update_or_create(url= question_data.pop("url"), defaults=question_data)
                 instance.questions.add(question)
+        instance.save()
         return instance
 
 
