@@ -67,7 +67,7 @@ class Question(models.Model):
     solved_by = models.ManyToManyField(User, related_name="questions_solved")
 
     def has_user(self,user):
-        return True if (Question.objects.filter(id=self.id, participants_in= [user.id]).count() == 1 or Question.objects.filter(id=self.id, solved_by__in = user.id).count() == 1) else False
+        return True if Question.objects.filter(id=self.id, solved_by__in = [user]).count() == 1 else False
 
 class Assignment(models.Model):
     title = models.CharField(max_length=20)

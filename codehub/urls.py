@@ -26,5 +26,5 @@ urlpatterns = [
     path('users',UserListView.as_view()),
     path('users/<username>', UserDetailView.as_view()),
     path('codingcenter/', include('codingcenter.urls')),
-    path('redirect/question/<id>', QuestionRedirectView )
+    path('redirect/question/<id>', QuestionRedirectView.as_view())
 ]

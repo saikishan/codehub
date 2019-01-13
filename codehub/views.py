@@ -20,8 +20,8 @@ class QuestionRedirectView(APIView):
         except Question.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk, format=None):
-        question = self.get_object(pk)
+    def get(self, request, id, format=None):
+        question = self.get_object(id)
         if not question.has_user(request.user):
             question.participants.add(request.user)
             question.save()
