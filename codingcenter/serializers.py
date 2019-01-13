@@ -55,7 +55,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 class AssignmentListSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True, required=False, write_only=True)
-    created_by = UserListSerializer(required=False)
+    created_by = UserListSerializer(read_only=True)
 
     class Meta:
         model = Assignment
@@ -65,7 +65,7 @@ class AssignmentListSerializer(serializers.ModelSerializer):
 
 class AssignmentDetailSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True, required=False)
-    created_by = UserListSerializer(required=False)
+    created_by = UserListSerializer(read_only=True)
     def _user(self):
         return self.context["request"].user
 

@@ -36,7 +36,7 @@ class AssignmentListView(APIView):
         return Response(AssignmentListSerializer(Assignment.objects.all() ,many= True).data , status = status.HTTP_200_OK)
 
     def post(self, request, format = None):
-        assignmentserialised = AssignmentListSerializer(data=request.data, context={
+        assignmentserialised = AssignmentDetailSerializer(data=request.data, context={
             'request' : request,
         })
         if assignmentserialised.is_valid():
