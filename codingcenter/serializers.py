@@ -4,11 +4,12 @@ from codingcenter.models import Assignment,Question,User
 class UserListSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     email = serializers.CharField(write_only=True)
+    date_of_birth = serializers.DateField(write_only=True)
     is_admin = serializers.BooleanField(read_only=True)
     is_staff = serializers.BooleanField(read_only=True)
     class Meta:
         model = User
-        fields = ('username','email','name', 'password', "is_admin", "is_staff")
+        fields = ('username','email','name', 'password', "is_admin", "is_staff", "date_of_birth")
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)

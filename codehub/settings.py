@@ -113,8 +113,12 @@ WSGI_APPLICATION = 'codehub.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dchstu44m8pq8c',
+        'USER': 'hfzynsxbdeguqv',
+        'PASSWORD': '59d5e4ae3da31b31b4ce444d547e485f5ebd2bdd681aba24697dc08058015799',
+        'HOST': 'ec2-174-129-18-247.compute-1.amazonaws.com',
+        'PORT': '5432'
     }
 }
 

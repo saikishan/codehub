@@ -4,10 +4,20 @@ from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import COMMASPACE, formatdate
+#from codehub.config import get_config
+
+config_data = {
+    "email_sender" : "codehub.sender@gmail.com",
+    "email_sender_password" : "pythoncjs",
+    "default" : None,
+}
+def get_config(key="default"):
+    return config_data.get(key,None)
+
 
 def send_mail(send_from, send_to, subject, text, files=None,
-              server="127.0.0.1", port=):
-    assert isinstance(send_to, list)
+              server='smtp.gmail.com', port=587):
+    #assert isinstance(send_to, list)
 
     msg = MIMEMultipart()
     msg['From'] = send_from
@@ -28,8 +38,10 @@ def send_mail(send_from, send_to, subject, text, files=None,
         msg.attach(part)
 
 
-    smtp = smtplib.SMTP(server)
+    smtp = smtplib.SMTP(server, port)
     smtp.starttls()
-    smtp.login(email= "15pa1a05e0@vishnu.edu.in", password="pythonc++")
+    smtp.login(get_config("email_sender"), password="pythonc++")
     smtp.sendmail(send_from, send_to, msg.as_string())
     smtp.close()
+
+send_mail(get_config("email_sender"),"15pa1a05e0@vishnu.edu.in",subject= "Test Email" ,text ="THis is a test Mail" )
