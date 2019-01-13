@@ -162,8 +162,8 @@ class AdminUserView(APIView):
             raise Http404
 
     def put(self, request, username, format=None):
-        user = user = self.get_object(username)
-        user_serialised = UserListSerializer(user, data=request)
-        if user_serialised.is_valid():
+        user = self.get_object(username)
+        user_serialised = UserAdminSerializer(user, data=request.datat        if user_serialised.is_valid():
             user_serialised.save()
             return Response(user_serialised.data, status=status.HTTP_202_ACCEPTED)
+        return Response(user_serialised.errors, status=status.HTTP_400_BAD_REQUEST)

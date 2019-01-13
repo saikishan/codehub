@@ -62,6 +62,8 @@ INSTALLED_APPS = [
     'codingcenter.apps.CodingcenterConfig',
 ]
 
+
+
 #config for restframework
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (

@@ -29,6 +29,8 @@ class UserDetailSerializer(serializers.ModelSerializer):
         fields = ('username','email','name',"is_admin","is_staff")
 
 class UserAdminSerializer(serializers.ModelSerializer):
+    is_admin =  serializers.BooleanField(required=False)
+    is_admin = serializers.BooleanField(required=False)
     class Meta:
         model = User
         fields = ('is_admin', 'is_staff')
