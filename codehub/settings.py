@@ -116,10 +116,10 @@ WSGI_APPLICATION = 'codehub.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dchstu44m8pq8c',
-        'USER': 'hfzynsxbdeguqv',
-        'PASSWORD': '59d5e4ae3da31b31b4ce444d547e485f5ebd2bdd681aba24697dc08058015799',
-        'HOST': 'ec2-174-129-18-247.compute-1.amazonaws.com',
+        'NAME': 'da9hb5n0on6lqq',
+        'USER': 'ctydppdpilqhhd',
+        'PASSWORD': 'e6d858e24a46a51243eb06bae0c757b315fc130ee7031bb237e2e8d0a8998d41',
+        'HOST': 'ec2-54-221-253-228.compute-1.amazonaws.com',
         'PORT': '5432'
     }
 }
