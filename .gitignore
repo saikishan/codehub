@@ -1,6 +1,7 @@
 .idea/
 myenv/
 myenv-test/
-*/__pycache__/
 */*/__pycache__/
-codingcenter/migrations/*
+*.pyo
+*.pyc
+pyc.sh

@@ -15,8 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-
+from rest_framework_jwt.views import obtain_jwt_token,refresh_jwt_token,verify_jwt_token
+from codingcenter.views import UserListView, UserDetailView, AdminUserView
+from codehub.views import QuestionRedirectView
 urlpatterns = [
+    path('api-token-auth',obtain_jwt_token),
+    path('api-token-refresh', refresh_jwt_token),
+    path('api-token-verify', verify_jwt_token),
     path('admin/', admin.site.urls),
-    path('codingcenter/', include('codingcenter.urls'))
+    path('users',UserListView.as_view()),
+    path('users/<username>', UserDetailView.as_view()),
+    path('admin/users/<username>',AdminUserView.as_view()),
+    path('codingcenter/', include('codingcenter.urls')),
+    path('redirect/question/<id>', QuestionRedirectView.as_view())
 ]

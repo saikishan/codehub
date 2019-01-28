@@ -1,13 +1,79 @@
 from django.db import models
-from codingcenter.scraper_config import SUPPORTED_PLATFORMS
+from django.contrib.auth.models import AbstractBaseUser,BaseUserManager
+
 # Create your models here.
+
+#custom user models dont touch
+class UserManager(BaseUserManager):
+    use_in_migrations = True
+
+    def create_user(self, email, name, username,  date_of_birth, password):
+        user = self.model(
+            email =  email,
+            date_of_birth = date_of_birth,
+            name = name,
+            username=username
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+    def create_staffuser(self, email, name, username, date_of_birth, password):
+        user = self.create_user(
+            email = email,
+            name = name ,
+            date_of_birth = date_of_birth,
+            username= username
+        )
+        user.staff = True
+        user.save(using=self._db)
+        return user
+
+    def create_adminuser(self, email, name, username, date_of_birth, password):
+        user = self.create_user(
+            email = email,
+            name = name ,
+            date_of_birth = date_of_birth,
+            username= username
+        )
+        user.admin = True
+        user.staff = True
+        user.save(using=self._db)
+        return user
+
+class User(AbstractBaseUser):
+    objects = UserManager()
+    email = models.EmailField(verbose_name='email address',
+                    max_length=255,
+                    unique=True,)
+    username = models.CharField(max_length=30, unique=True)
+    name = models.CharField(max_length=100)
+    date_of_birth = models.DateField()
+
+    is_staff = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
+
+    description = models.CharField(default="Explain Yourself!", max_length=500)
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['date_of_birth', 'name', 'username']
+
+    def __str__(self):
+        return self.email
 
 class Question(models.Model):
     title = models.CharField(max_length= 30)
     url = models.CharField(max_length= 100, unique= True)
-    platform = models.CharField(max_length=5, choices= SUPPORTED_PLATFORMS)
+    created_by = models.ForeignKey('codingcenter.User', related_name='created_questions', null=True, on_delete=models.SET_NULL)
+    participants = models.ManyToManyField(User, related_name="questions_tried")
+    solved_by = models.ManyToManyField(User, related_name="questions_solved")
+
+    def has_user(self,user):
+        return True if Question.objects.filter(id=self.id, solved_by__in = [user]).count() == 1 else False
 
 class Assignment(models.Model):
     title = models.CharField(max_length=20)
-    owner = models.CharField(max_length=30)
+    created_by = models.ForeignKey('codingcenter.User',related_name= 'created_assignments', null=True, on_delete=models.SET_NULL)
     questions = models.ManyToManyField(Question)
+    participants = models.ManyToManyField(User)
+
+    def has_user(self,user):
+        return True if (Assignment.objects.filter(id=self.id, participants_in= [user.id]).count() == 1) else False
