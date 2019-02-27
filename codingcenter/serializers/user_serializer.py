@@ -6,7 +6,7 @@ class UserListSerializer(serializers.ModelSerializer):
     date_of_birth = serializers.DateField(write_only=True)
     is_admin = serializers.BooleanField(read_only=True)
     is_staff = serializers.BooleanField(read_only=True)
-    hackerrank_id = serializers.CharField()
+    hackerrank_id = serializers.CharField(required=False)
 
     class Meta:
         model = User
