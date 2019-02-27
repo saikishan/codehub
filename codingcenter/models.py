@@ -48,10 +48,9 @@ class User(AbstractBaseUser):
     username = models.CharField(max_length=30, unique=True)
     name = models.CharField(max_length=100)
     date_of_birth = models.DateField()
-
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-
+    hackerrank_id = models.CharField(max_length=30, unique=True, default=None)
     description = models.CharField(default="Explain Yourself!", max_length=500)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['date_of_birth', 'name', 'username']
@@ -75,5 +74,11 @@ class Assignment(models.Model):
     questions = models.ManyToManyField(Question)
     participants = models.ManyToManyField(User)
 
-    def has_user(self,user):
-        return True if (Assignment.objects.filter(id=self.id, participants_in= [user.id]).count() == 1) else False
+    def has_user(self, user):
+        return True if (Assignment.objects.filter(id=self.id, participants_id = user.id).count() == 1) else False
+
+
+class College(models.Model):
+    name = models.CharField(max_length= 50)
+    hackerrank_college_id = models.CharField(max_length=50, unique=True, default=None)
+    students = models.ManyToManyField(User, related_name="colleges")
