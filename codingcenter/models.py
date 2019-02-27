@@ -50,7 +50,7 @@ class User(AbstractBaseUser):
     date_of_birth = models.DateField()
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    hackerrank_id = models.CharField(max_length=30, unique=True, default=None)
+    hackerrank_id = models.CharField(max_length=30, unique=True, default=None, null=True)
     description = models.CharField(default="Explain Yourself!", max_length=500)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['date_of_birth', 'name', 'username']
@@ -80,5 +80,5 @@ class Assignment(models.Model):
 
 class College(models.Model):
     name = models.CharField(max_length= 50)
-    hackerrank_college_id = models.CharField(max_length=50, unique=True, default=None)
+    hackerrank_college_id = models.CharField(max_length=50, unique=True, default=None, null=True)
     students = models.ManyToManyField(User, related_name="colleges")

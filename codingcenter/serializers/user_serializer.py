@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from codingcenter.models import User
+from codingcenter.models import User,College
 class UserListSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     email = serializers.CharField(write_only=True)
     date_of_birth = serializers.DateField(write_only=True)
     is_admin = serializers.BooleanField(read_only=True)
     is_staff = serializers.BooleanField(read_only=True)
-    hackerrank_id = serializers.CharField(required=False)
+    hackerrank_id = serializers.CharField(required=False , allow_null=True)
 
     class Meta:
         model = User
@@ -17,11 +17,13 @@ class UserListSerializer(serializers.ModelSerializer):
         return user
 
     def update(self, instance, validated_data):
+        def get_colleges(college_ids):
+            return College.objects.filter(id_in = college_ids)
         instance.name = validated_data.get("name", instance.name)
         instance.username = validated_data.get("username", instance.name)
         instance.email = validated_data.get("email", instance.email)
         instance.date_of_birth = validated_data.get("date_of_birth", instance.date_of_birth)
-        instance.hackerrank_id = validated_data.get("hackerrank_id", instance.hackerrank_id)
+        instance.hackerrank_id.set(get_colleges(validated_data.get("hackerrank_id", instance.hackerrank_id)))
         instance.save()
         return instance
 
