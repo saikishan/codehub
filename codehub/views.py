@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from codingcenter.models import Assignment,Question
+from codingcenter.models import Assignment,Question,Result
 from django.http import Http404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -22,7 +22,7 @@ class QuestionRedirectView(APIView):
 
     def get(self, request, id, format=None):
         question = self.get_object(id)
-        if not question.has_user(request.user):
-            question.participants.add(request.user)
-            question.save()
+        if request.user not in question.participants:
+            re = Result(user= request.user, question = question)
+            re.save()
         return Response({ "url" :question.url })

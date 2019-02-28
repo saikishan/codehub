@@ -18,12 +18,13 @@ class UserListSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         def get_colleges(college_ids):
-            return College.objects.filter(id_in = college_ids)
+            return College.objects.filter(id_in = college_ids) if type(college_ids) == list else college_ids
         instance.name = validated_data.get("name", instance.name)
         instance.username = validated_data.get("username", instance.name)
         instance.email = validated_data.get("email", instance.email)
         instance.date_of_birth = validated_data.get("date_of_birth", instance.date_of_birth)
-        instance.hackerrank_id.set(get_colleges(validated_data.get("hackerrank_id", instance.hackerrank_id)))
+        instance.hackerrank_id = validated_data.get("hackerrank_id", instance.hackerrank_id)
+        instance.colleges.set(get_colleges(validated_data.get("colleges", instance.colleges)))
         instance.save()
         return instance
 

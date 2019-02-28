@@ -168,3 +168,6 @@ JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=10),
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
 }
+
+#rabbitmq config
+#BROKER_URL = 'amqp://wrhrpfuk:F-PFfE0Hjd1Y_imdVEx7ab1JOwjqYHnf@barnacle.rmq.cloudamqp.com/wrhrpfuk'
