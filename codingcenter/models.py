@@ -64,15 +64,31 @@ class Question(models.Model):
     url = models.CharField(max_length= 100, unique= True)
     created_by = models.ForeignKey('codingcenter.User', related_name='created_questions', null=True, on_delete=models.SET_NULL)
     participants = models.ManyToManyField("User", through="Result")
+    last_scraped = models.DateTimeField(auto_now_add=True)
+
     def has_user(self,user):
         return True if Question.objects.filter(id=self.id, solved_by__in = [user]).count() == 1 else False
+
+    def get_dashboard(self,):
+        "add the sample data and test the set"
+        Question.objects.filter(id= self.id, participants__results__status=True).values_list()
 
 class Assignment(models.Model):
     title = models.CharField(max_length=20)
     created_by = models.ForeignKey('codingcenter.User',related_name= 'created_assignments', null=True, on_delete=models.SET_NULL)
     questions = models.ManyToManyField(Question)
+    participants = models.ManyToManyField('codingcenter.User', related_name='assignments')
+
     def has_user(self, user):
         return True if (Assignment.objects.filter(id=self.id, participants_id = user.id).count() == 1) else False
+
+    def get_dashboard(self,):
+        '''
+        add the filter the support with and with out question id
+        this should also return total based
+        type of query.
+        '''
+        pass
 
 
 class College(models.Model):

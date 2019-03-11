@@ -6,6 +6,7 @@ from codingcenter.permissions import IsAdminPermission
 from codingcenter.serializers import UserListSerializer,UserDetailSerializer,UserAdminSerializer
 from codingcenter.models import User
 from django.http import Http404
+
 class UserListView(APIView):
     def get(self, request, format=None):
         return  Response(UserListSerializer(User.objects.all(),many=True).data)

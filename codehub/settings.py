@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 import datetime
+import django
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,7 +28,6 @@ SECRET_KEY = '++x(lhbecstme&83$9j!9%3qaz9z03o2!4e_a!*_%-bu&)g43n'
 DEBUG = True
 
 ALLOWED_HOSTS = ['kishan.localhost.run', '192.168.1.4', 'localhost']
-
 
 #CROS_Support
 CORS_ORIGIN_ALLOW_ALL = True
@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'rest_framework',
     #config for codingcenter
     'codingcenter.apps.CodingcenterConfig',
+    'django_celery_beat',
 ]
 
 

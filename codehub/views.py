@@ -22,7 +22,7 @@ class QuestionRedirectView(APIView):
 
     def get(self, request, id, format=None):
         question = self.get_object(id)
-        if request.user not in question.participants:
-            re = Result(user= request.user, question = question)
+        if(Result.objects.filter(question = question, user= request.user).count() == 0):
+            re = Result(question = question, user= request.user)
             re.save()
         return Response({ "url" :question.url })
