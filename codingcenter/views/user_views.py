@@ -36,7 +36,7 @@ class UserDetailView(APIView):
         if request.user != user and request.user.is_admin == False:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-        user_serialised = UserListSerializer(user, data=request)
+        user_serialised = UserDetailSerializer(user, data=request.data)
         if user_serialised.is_valid():
             user_serialised.save()
             return Response(user_serialised.data, status=status.HTTP_202_ACCEPTED)
