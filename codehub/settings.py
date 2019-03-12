@@ -13,7 +13,8 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 import datetime
 import django
-
+import dj_database_url
+import codehub.secrets as secrets
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -22,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '++x(lhbecstme&83$9j!9%3qaz9z03o2!4e_a!*_%-bu&)g43n'
+SECRET_KEY = secrets.DJANGO_SECRET
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -114,11 +115,9 @@ WSGI_APPLICATION = 'codehub.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 PROJECT_PATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(PROJECT_PATH, 'db.sqlite3')
-    }
+    'default': dj_database_url.config(default=secrets.POSTGRES_SECRET)
 }
 
 
@@ -171,4 +170,4 @@ JWT_AUTH = {
 }
 
 #rabbitmq config
-#BROKER_URL = 'amqp://wrhrpfuk:F-PFfE0Hjd1Y_imdVEx7ab1JOwjqYHnf@barnacle.rmq.cloudamqp.com/wrhrpfuk'
+BROKER_URL = secrets.AMQP_SECRET

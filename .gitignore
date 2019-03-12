@@ -5,3 +5,5 @@ myenv-test/
 *.pyo
 *.pyc
 pyc.sh
+codingcenter/migrations/
+codehub/secrets.py
