@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count
 from django.contrib.auth.models import AbstractBaseUser,BaseUserManager
 
 # Create your models here.
@@ -88,6 +89,7 @@ class Assignment(models.Model):
         this should also return total based
         type of query.
         '''
+        Assignment.objects.filter(questions__results__status=True).anotate(total= Count('question__results')).values('questions__results__user__name')
         pass
 
 
