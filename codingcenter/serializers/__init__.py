@@ -2,4 +2,3 @@ from .question_serializer import QuestionSerializer
 from .user_serializer import UserAdminSerializer,UserDetailSerializer,UserListSerializer
 from .assignment_serializer import AssignmentDetailSerializer,AssignmentListSerializer
 from .college_serializer import CollegeDetailSerializer
-from .dashboard_serializer import DashboardSerializer

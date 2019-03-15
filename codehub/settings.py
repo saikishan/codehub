@@ -170,4 +170,4 @@ JWT_AUTH = {
 }
 
 #rabbitmq config
-BROKER_URL = secrets.AMQP_SECRET
+#BROKER_URL = secrets.AMQP_SECRET

@@ -1,13 +1,12 @@
-from celery import task
 from .models import Question,College,Result
 import arrow
 from scraper import Scrapie
-from cache_memoize import cache_memoize
 from celery.schedules import crontab
 from codehub.celery import app
-@cache_memoize(20*60)
-@task
+
+@app.task
 def scrape_question(question_id, skip_scrapped = False):
+    print("Question_ID", question_id)
     def get_platform_names(question_url):
         if question_url.startswith("https://www.hackerrank.com/"):
             return ('results__user__hackerrank_id',"hackerrank_college_id", "user__hackerrank_id__in")
@@ -29,14 +28,11 @@ def scrape_question(question_id, skip_scrapped = False):
     }
     Result.objects.filter(**update_query).update(status =True)
 
-@cache_memoize(12*60*60)
-@task
+@app.task
 def all_question_scheduler():
     for question in Question.objects.all():
         scrape_question.delay(question.id)
     return "All questions Queued"
-
-
 
 
 @app.on_after_configure.connect
