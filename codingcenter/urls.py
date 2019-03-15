@@ -8,5 +8,5 @@ urlpatterns = [
     path('questions/<pk>', views.QuestionDetailView.as_view()),
     path('questions', views.QuestionListView.as_view()),
     path('colleges', views.CollegeListView.as_view()),
-    #path('questions', views.QuestionDetailView.as_view())
+    path('dashboard', views.DashboardDataView.as_view())
 ]

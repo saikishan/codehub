@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count,F
 from django.contrib.auth.models import AbstractBaseUser,BaseUserManager
 
 # Create your models here.
@@ -69,9 +70,11 @@ class Question(models.Model):
     def has_user(self,user):
         return True if Question.objects.filter(id=self.id, solved_by__in = [user]).count() == 1 else False
 
-    def get_dashboard(self,):
+    def get_dashboard(self,to_list=False):
         "add the sample data and test the set"
-        Question.objects.filter(id= self.id, participants__results__status=True).values_list()
+        data = Question.objects.filter(id=self.id).values(username = F("results__user__username"),status = F("results__status"))
+        return data
+
 
 class Assignment(models.Model):
     title = models.CharField(max_length=20)
@@ -82,13 +85,19 @@ class Assignment(models.Model):
     def has_user(self, user):
         return True if (Assignment.objects.filter(id=self.id, participants_id = user.id).count() == 1) else False
 
-    def get_dashboard(self,):
+    def get_dashboard(self, question_id=None):
         '''
         add the filter the support with and with out question id
         this should also return total based
         type of query.
         '''
-        pass
+        if not question_id:
+            return Assignment.objects.filter(id=self.id, questions__results__status=True,
+                                      questions__results__question__in=F('questions'),
+                                      questions__results__user__in=F('participants')).values(
+                username = F('questions__results__user__username')).annotate(total=Count('questions__results')).order_by('total').reverse()
+        else:
+            return Assignment.objects.filter(id=self.id, questions__results__question=question_id, questions__results__user__in=F('participants')).values(username = F("questions__results__user__username"),status = F("questions__results__status"))
 
 
 class College(models.Model):

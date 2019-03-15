@@ -44,8 +44,10 @@ class AssignmentDetailView(APIView):
 
     def get(self, request, pk, format=None):
         assignment = self.get_object(pk)
+        assignment.participants.add(request.user)
+        assignment.save()
         serializer = AssignmentDetailSerializer(assignment)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request, pk, format=None):
         assignment = self.get_object(pk)
